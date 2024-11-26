@@ -1,32 +1,10 @@
 # frozen_string_literal: true
 
-require 'yaml'
-require 'json'
-require 'socket'
+require_relative 'server'
 
-config = YAML.load_file('config/server.yml')
+server = Server.new
+PORT = ENV.fetch('SERVER_PORT', 3000)
 
-server = TCPServer.new(
-  config['host'],
-  config['port']
-)
-
-def send_response(client, status, body)
-  body = JSON.dump(body)
-  headers = "HTTP/1.1 #{status}\n" \
-            "Content-Type: application/json\n" \
-            "Content-Length: #{body.bytesize}\n" \
-            "Connection: close\n"
-  client.print headers
-  client.print "\n"
-  client.print body
-end
-
-loop do
-  client = server.accept
-
-  body = { message: 'Hello, world!' }
-  send_response(client, '200 OK', body)
-
-  client.close
+server.listen(PORT) do
+  puts "Server running on port #{PORT}"
 end
