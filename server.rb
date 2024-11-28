@@ -11,7 +11,7 @@ class Server
   end
 
   def listen(port)
-    @server = TCPServer.new('localhost', port)
+    @server = TCPServer.new('0.0.0.0', port)
     yield
     loop do
       iteration
@@ -21,6 +21,18 @@ class Server
   # routes
   def get(path, &block)
     @router.register(:get, path, &block)
+  end
+
+  def post(path, &block)
+    @router.register(:post, path, &block)
+  end
+
+  def put(path, &block)
+    @router.register(:put, path, &block)
+  end
+
+  def delete(path, &block)
+    @router.register(:delete, path, &block)
   end
 
   private

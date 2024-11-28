@@ -3,7 +3,10 @@
 class Router
   def initialize
     @routes = {
-      get: {}
+      get: {},
+      post: {},
+      put: {},
+      delete: {}
     }
   end
 
@@ -12,7 +15,7 @@ class Router
   end
 
   def call(request, response)
-    route = @routes.dig(request.params[:method], request.params[:path])
+    route = @routes.dig(request.method, request.path)
     if route
       route.call(request, response)
     else
