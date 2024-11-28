@@ -13,7 +13,7 @@ class Request
   def parse_params
     params = @socket.gets.split(' ')
     {
-      method: params[0],
+      method: params[0].to_sym.downcase,
       path: params[1]
     }
   end
