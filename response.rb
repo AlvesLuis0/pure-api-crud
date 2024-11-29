@@ -10,11 +10,11 @@ class Response
 
   def send(status: :ok, body: {})
     @socket.print <<~RESPONSE
-      HTTP/1.1 #{HTTP_STATUS_CODE[status]}
-      Content-Type: application/json
-      Connection: close
-
-      #{JSON.dump(body)}
+      HTTP/1.1 #{HTTP_STATUS_CODE[status]}\r
+      Content-Type: application/json\r
+      Connection: close\r
+      \r
+      #{JSON.dump(body)}\r
     RESPONSE
 
     @socket.close
