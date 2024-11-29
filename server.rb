@@ -11,10 +11,12 @@ class Server
   end
 
   def listen(port)
-    @server = TCPServer.new('0.0.0.0', port)
+    server = TCPServer.new(port)
     yield
     loop do
-      iteration
+      Thread.start(server.accept) do |socket|
+        @router.call(Request.new(socket), Response.new(socket))
+      end
     end
   end
 
@@ -33,14 +35,5 @@ class Server
 
   def delete(path, &block)
     @router.register(:delete, path, &block)
-  end
-
-  private
-
-  def iteration
-    socket = @server.accept
-    request = Request.new(socket)
-    response = Response.new(socket)
-    @router.call(request, response)
   end
 end
